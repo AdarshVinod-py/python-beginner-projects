@@ -68,7 +68,7 @@ def edit_task():
                                 task_title = input("Enter new task title:\n")
                                 if task_title ==  'q' or task_title == 'Q':
                                     break
-                                elif task_title in task_list:
+                                elif task_title in task_list and task_title != name:
                                     print("A task already exits with that name pleas try a new one(press 'q' to exit)")
                                 else:
                                     task_list[task_title] = task_list.pop(name)
@@ -94,11 +94,32 @@ def edit_task():
             if reprompt.lower() != 'r':
                 break
 
-
+def mark_as_completed():
+    while True:
+        name = input("Enter task title to mark as completed(Press 'q' to exit):\n")
+        if name == 'q' or name == 'Q':
+            return
+        elif name in task_list:
+            if "Status" in task_list[name]:
+                undo_completed = input("Task is already marked as completed. Press 'u' to undo it\n")
+                if undo_completed == 'u' or undo_completed == 'U':
+                    del task_list[name]["Status"]
+                    with open("TODO.json","w") as file:
+                        json.dump(task_list,file)
+                    print("Removed 'Completed' status\n")
+            else:
+                task_list[name]["Status"] = "Completed"
+                with open("TODO.json","w") as file:
+                    json.dump(task_list,file)
+                print("Marked task as completed")
+        else:
+            reprompt = input("Couldn't find task with that title. Press 'r' to try again:\n")
+            if reprompt != 'r' and reprompt != 'R':
+                break
 
 
 def menu():    
-    options = ["1 -> Add Task","2 -> View Tasks","3 -> Edit Task","4 -> Remove Task","5 -> Exit"]
+    options = ["1 -> Add Task","2 -> View Tasks","3 -> Mark task as completed","4 -> Edit Task","5 -> Remove Task","6 -> Exit"]
     while True:
         for i in options:
             print(i)
@@ -110,10 +131,12 @@ def menu():
                 case 2:
                     view_task()
                 case 3:
-                    edit_task()
+                    mark_as_completed()
                 case 4:
-                    remove_task()
+                    edit_task()
                 case 5:
+                    remove_task()
+                case 6:
                     break
                 case _ :
                     print("Enter a valid choice")
