@@ -1,5 +1,5 @@
 import sqlite3
-from typing import Optional
+from typing import Optional , Any
 
 from expense import Expense
 
@@ -15,7 +15,7 @@ class ExpenseTracker:
         last_id = self.cursor.lastrowid
         return last_id
 
-    def view_expenses(self, category_id : Optional[int] = None, start_date : Optional[str] = None, end_date : Optional[str] = None ):
+    def view_expenses(self, category_id : Optional[int] = None, start_date : Optional[str] = None, end_date : Optional[str] = None ) -> list:
         query = "SELECT * FROM expenses WHERE 1 = 1"
         parameter = []
         if category_id is not None:
@@ -40,3 +40,21 @@ class ExpenseTracker:
             result.append(single_expense)
             
         return result
+
+    def update_expense(self,expense_id : int, **kwargs : Any):
+        column_names = []
+        values_to_update = []
+        if not kwargs:
+            return 0
+        for key,value in kwargs.items():
+            column_names.append(f"{key} = ?")
+            values_to_update.append(value)
+        set_clause = ", ".join(column_names)
+        values_to_update.append(expense_id)
+        query = f"UPDATE expenses SET {set_clause} where id = ?"
+        self.cursor.execute(query,values_to_update)
+        self.connection.commit()
+        row_count = self.cursor.rowcount
+        return row_count
+
+
