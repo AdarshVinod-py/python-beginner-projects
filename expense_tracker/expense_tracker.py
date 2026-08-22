@@ -1,6 +1,5 @@
 import sqlite3
 from typing import Optional , Any
-
 from expense import Expense
 
 class ExpenseTracker:
