@@ -37,7 +37,6 @@ class ExpenseTracker:
         for row in rows:
             single_expense = Expense(id=row[0], amount= row[1], category_id= row[2], date= row[3], description= row[4])
             result.append(single_expense)
-            
         return result
 
     def update_expense(self,expense_id : int, **kwargs : Any) -> int:
@@ -46,8 +45,11 @@ class ExpenseTracker:
         if not kwargs:
             return 0
         for key,value in kwargs.items():
-            column_names.append(f"{key} = ?")
-            values_to_update.append(value)
+            if value != "":
+                column_names.append(f"{key} = ?")
+                values_to_update.append(value)
+        if not column_names:
+            return 0 
         set_clause = ", ".join(column_names)
         values_to_update.append(expense_id)
         query = f"UPDATE expenses SET {set_clause} WHERE id = ?"

@@ -4,15 +4,17 @@ from expense import Expense
 
 connection, cursor = create_connection()
 tracker = ExpenseTracker(connection,cursor)
+tracker.cursor.execute("SELECT * FROM categories")
+categories = tracker.cursor.fetchall()
+valid_ids = [id for id, name in categories]
 
-def select_categories()-> int:
-    tracker.cursor.execute("SELECT * FROM categories")
-    categories = tracker.cursor.fetchall()
+def view_categories()-> None:
     print(f"\n{'ID' :>5} - Category")
     print("-"*20)
     for id, name in categories:
         print(f"{id :>5} - {name}")
-    valid_ids = [id for id, name in categories]
+
+def select_category()-> int:  
     while True:
         try:
             category = int(input("\nEnter Category ID: "))
@@ -42,8 +44,8 @@ def add_expense_ui()-> None:
             break
         except ValueError:
             print("Please Enter amount in digits")
-
-    category = select_categories()
+    view_categories()
+    category = select_category()
 
     description = input("Enter Description: ")
     if description == "":
@@ -69,7 +71,8 @@ def view_expense_ui()-> None:
             while True:
                 which_filter = input("Enter 'c' to filter by categories,\nEnter 'd' to filter with dates: ")
                 if which_filter == 'c':
-                    category = select_categories()
+                    view_categories()
+                    category = select_category()
                     expenses = tracker.view_expenses(category_id=category)
                     display_expenses(expenses)
                     break  
@@ -92,7 +95,47 @@ def view_expense_ui()-> None:
         else:
             print("Invalid Choice")            
 
-            
+def update_expenses_ui():
+    expense_id = int(input("Enter Expense ID to update expense: "))
+    expenses = tracker.view_expenses()
+    valid_id = [expense.id for expense in expenses]
+    if expense_id not in valid_id:
+        print("Expense not found")
+    else:
+        print("Enter Values to update(Press 'Enter' to skip a section\n)")
+        while True:
+            amount = input("Enter Amount: ")
+            if amount != "":
+                try:
+                    amount = float(amount)
+                    break
+                except ValueError:
+                    print("Enter a valid Amount in digits: ")
+            elif amount == "":
+                break
+        view_categories()        
+        while True:
+            category = input("Enter Category ID: ")
+            if category != "":
+                try:
+                    category = int(category)
+                    if category in valid_ids:
+                      break
+                    else: 
+                        print("Enter a valid ID: ")
+                except ValueError:
+                    print("Invalid Category ID")
+            elif category == "":
+                break
+        description = input("Enter Description: ")
+        date = input("Enter Date (YYYY-MM-DD): ")
+        row_count = tracker.update_expense(expense_id=expense_id, amount=amount, category_id=category, date= date,description=description)
+        if row_count == 1:
+            print("Expense updated sucessfully")
+        if row_count == 0:
+            print("Expense was not updated")
+
+
 
 #add_expense_ui()
-view_expense_ui()
+#view_expense_ui()
