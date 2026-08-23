@@ -56,7 +56,7 @@ def add_expense_ui()-> None:
     if expense_id is None:
         print("Failed to add Expense")
     else:
-        print(f"Expense added sucessfully. ID ={expense_id}\n")
+        print(f"Expense added sucessfully. ID = {expense_id}\n")
 
 def view_expense_ui()-> None:
     while True:
@@ -198,4 +198,3 @@ def view_total_ui()->None :
             break
         else:
             print("Invalid Choice")      
-
