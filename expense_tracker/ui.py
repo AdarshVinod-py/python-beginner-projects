@@ -95,7 +95,7 @@ def view_expense_ui()-> None:
         else:
             print("Invalid Choice")            
 
-def update_expenses_ui():
+def update_expenses_ui() -> None:
     while True:
         try:
             expense_id = int(input("Enter Expense ID to update expense: "))
@@ -140,7 +140,7 @@ def update_expenses_ui():
         elif row_count == 0:
             print("Expense was not updated")
 
-def delete_expense_ui():
+def delete_expense_ui()-> None:
     while True:
         try:
             expense_id = int(input("Enter Expense ID to delete expense: "))
@@ -162,7 +162,40 @@ def delete_expense_ui():
         else:
             print("Delete was cancelled")          
 
+def view_total_ui()->None :
+    while True:
+        filters = input("Do you want to add Filters?(y/n): ")
 
+        if filters == 'n':
+            total = tracker.view_total()
+            print(f"Total : {total :.2f} Rs")
+            break
 
-#add_expense_ui()
-#view_expense_ui()
+        elif filters == 'y':
+            while True:
+                which_filter = input("Enter 'c' to filter by categories,\nEnter 'd' to filter with dates: ")
+                if which_filter == 'c':
+                    view_categories()
+                    category = select_category()
+                    total = tracker.view_total(category_id=category)
+                    print(f"Total : {total :.2f} Rs")
+                    break  
+                    
+                elif which_filter == 'd':
+                    start_date = input("Enter start date (YYYY-MM-DD): ")
+                    end_date = input("Enter end date (YYYY-MM-DD): ")
+                    if start_date == "":
+                        start_date = None
+                    if end_date == "":
+                        end_date = None
+
+                    total = tracker.view_total(start_date=start_date,end_date=end_date)
+                    print(f"Total : {total :.2f} Rs")
+                    break
+
+                else:
+                    print("Invalid choice")
+            break
+        else:
+            print("Invalid Choice")      
+
