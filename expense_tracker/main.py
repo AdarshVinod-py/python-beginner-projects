@@ -1,6 +1,8 @@
+import database
+database.setup_database()
 import ui
 
-menu = "\n1 -> Add Expense\n2 -> View Expense\n3 -> View Total\n4 -> Update Expense\n5 -> Delete Expense\n0 -> Exit"
+menu = "1 -> Add Expense\n2 -> View Expense\n3 -> View Total\n4 -> Update Expense\n5 -> Delete Expense\n0 -> Exit"
 while True:
     try:
         print(menu)

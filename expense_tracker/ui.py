@@ -31,7 +31,7 @@ def display_expenses(expenses : list)->None:
         else:
             tracker.cursor.execute("SELECT * FROM categories")
             categories_dict = {id : name for id,name in tracker.cursor.fetchall()}
-            print(f"{'ID':<5}{'Amount':<8}{'Category':<12}{'Date':<15}{'Description':<15}")
+            print(f'{'ID':<5}{'Amount':<8}{'Category':<12}{'Date':<15}{'Description':<15}')
             print("-"*55)
             for row in expenses:
                 print(f"{row.id:<5}{row.amount:<8}{categories_dict[row.category_id]:<12}{row.date:<15}{"" if row.description is None else row.description}")
@@ -197,4 +197,4 @@ def view_total_ui()->None :
                     print("Invalid choice")
             break
         else:
-            print("Invalid Choice")      
+            print("Invalid Choice")

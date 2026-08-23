@@ -37,6 +37,3 @@ def setup_database():
     insert_default_categories(cursor)
     connection.commit()
     connection.close()
-
-if __name__ == "__main__":
-    setup_database()
