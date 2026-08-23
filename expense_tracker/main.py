@@ -96,7 +96,12 @@ def view_expense_ui()-> None:
             print("Invalid Choice")            
 
 def update_expenses_ui():
-    expense_id = int(input("Enter Expense ID to update expense: "))
+    while True:
+        try:
+            expense_id = int(input("Enter Expense ID to update expense: "))
+            break
+        except ValueError:
+            print("Invalid Input")
     expenses = tracker.view_expenses()
     valid_id = [expense.id for expense in expenses]
     if expense_id not in valid_id:
@@ -132,8 +137,30 @@ def update_expenses_ui():
         row_count = tracker.update_expense(expense_id=expense_id, amount=amount, category_id=category, date= date,description=description)
         if row_count == 1:
             print("Expense updated sucessfully")
-        if row_count == 0:
+        elif row_count == 0:
             print("Expense was not updated")
+
+def delete_expense_ui():
+    while True:
+        try:
+            expense_id = int(input("Enter Expense ID to delete expense: "))
+            break
+        except ValueError:
+            print("Invalid Input")
+    expenses = tracker.view_expenses()
+    valid_id = [expense.id for expense in expenses]
+    if expense_id not in valid_id:
+        print("Expense not found")
+    else:
+        validation = input("Are you sure you want to delete this expense? (y/n): ")
+        if validation == 'y':
+            row_count = tracker.delete_expense(expense_id=expense_id)
+            if row_count == 1:
+                print("Expense deleted sucessfully")
+            elif row_count == 0:
+                print("Failed to delete expense")  
+        else:
+            print("Delete was cancelled")          
 
 
 
